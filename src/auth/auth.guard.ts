@@ -10,15 +10,17 @@ export class AuthGuard extends AuthGuardPassport('jwt') {
   canActivate(context: ExecutionContext) {
     return super.canActivate(context);
   }
-  handleRequest<TUser = any>(
+  handleRequest(
     err: any,
     user: any,
     // info: any,
     // context: ExecutionContext,
     // status?: any,
-  ): TUser {
+  ) {
     if (err || !user) {
-      return err || new UnauthorizedException();
+      console.log({ err, user });
+
+      throw err || new UnauthorizedException();
     }
     return user;
   }

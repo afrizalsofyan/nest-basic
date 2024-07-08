@@ -85,4 +85,25 @@ export class AuthService {
 
     return { success: true, message: 'Login success', accessToken: token };
   }
+
+  async profileUser(id: number) {
+    const user = await this.prisma.users.findFirst({
+      where: {
+        id,
+      },
+      select: {
+        id: true,
+        avatar: true,
+        created_at: true,
+        name: true,
+        email: true,
+      },
+    });
+
+    if (!user) {
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    }
+
+    return { success: true, statusCode: HttpStatus.OK, result: user };
+  }
 }
