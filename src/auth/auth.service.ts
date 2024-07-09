@@ -86,6 +86,11 @@ export class AuthService {
     return { success: true, message: 'Login success', accessToken: token };
   }
 
+  /**
+   * get detail user
+   * @param id
+   * @returns
+   */
   async profileUser(id: number) {
     const user = await this.prisma.users.findFirst({
       where: {
@@ -105,5 +110,39 @@ export class AuthService {
     }
 
     return { success: true, statusCode: HttpStatus.OK, result: user };
+  }
+
+  async uploadAvatar(id: number, avatar: string) {
+    const checkUserExists = await this.prisma.users.findFirst({
+      where: {
+        id,
+      },
+    });
+
+    if (!checkUserExists) {
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    }
+
+    const updatedUser = await this.prisma.users.update({
+      where: {
+        id,
+      },
+      data: {
+        avatar: avatar,
+      },
+    });
+
+    if (!updatedUser) {
+      throw new HttpException(
+        'Failed to updated user. Please try again',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    return {
+      success: true,
+      statusCode: HttpStatus.OK,
+      result: { avatar: updatedUser.avatar },
+    };
   }
 }

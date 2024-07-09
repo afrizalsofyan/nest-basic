@@ -1,7 +1,19 @@
-import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Patch,
+  Post,
+  Req,
+  UploadedFile,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common';
 import { LoginDTO, RegisterDTO } from './dto';
 import { AuthService } from './auth.service';
 import { AuthGuard } from './auth.guard';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
 
 @Controller('auth')
 export class AuthController {
@@ -21,5 +33,30 @@ export class AuthController {
   @Get('profile')
   async detailUser(@Req() req) {
     return await this.authService.profileUser(req.user.id);
+  }
+
+  @UseGuards(AuthGuard)
+  @UseInterceptors(
+    FileInterceptor('avatar', {
+      storage: diskStorage({
+        destination: 'public/uploads/image',
+        filename: (req, file, cb) => {
+          const mimetype = file.mimetype.split('/');
+          const user = req.user;
+          cb(
+            null,
+            // @ts-ignore
+            `${user.name}_${file.fieldname}_${new Date().getTime()}.${mimetype[mimetype.length - 1]}`,
+          );
+        },
+      }),
+    }),
+  )
+  @Patch('avatar')
+  async updateAvatar(@Req() req, @UploadedFile() file: Express.Multer.File) {
+    return this.authService.uploadAvatar(
+      req.user.id,
+      file.path.replace('public', ''),
+    );
   }
 }
