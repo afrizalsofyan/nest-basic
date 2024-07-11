@@ -32,10 +32,10 @@ model users {
   tasks      tasks[]
 }
 
-// model schools {
-//   id          Int     @id @default(autoincrement())
-//   school_name String
-//   email       String?
-//   address     String?
-//   phone       String?
-// }
+model schools {
+  id          Int     @id @default(autoincrement())
+  school_name String
+  email       String?
+  address     String?
+  phone       String?
+}
