@@ -102,6 +102,7 @@ export class AuthService {
         created_at: true,
         name: true,
         email: true,
+        tasks: true,
       },
     });
 

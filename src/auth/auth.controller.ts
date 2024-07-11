@@ -52,6 +52,7 @@ export class AuthController {
       }),
     }),
   )
+  @UseGuards(AuthGuard)
   @Patch('avatar')
   async updateAvatar(@Req() req, @UploadedFile() file: Express.Multer.File) {
     return this.authService.uploadAvatar(
