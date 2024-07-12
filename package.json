@@ -20,7 +20,8 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "db:generate": "prisma generate --schema=./src/prisma/schema.prisma",
     "db:pull": "prisma db pull --schema=./src/prisma/schema.prisma",
-    "db:validate": "prisma db validate --schema=./src/prisma/schema.prisma"
+    "db:validate": "prisma db validate --schema=./src/prisma/schema.prisma",
+    "doc:view": "npx @compodoc/compodoc -p tsconfig.json -s"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
@@ -30,6 +31,7 @@
     "@nestjs/passport": "^10.0.3",
     "@nestjs/platform-express": "^10.0.0",
     "@nestjs/serve-static": "^4.0.2",
+    "@nestjs/swagger": "^7.4.0",
     "@prisma/client": "^5.16.1",
     "bcrypt": "^5.1.1",
     "class-transformer": "^0.5.1",
