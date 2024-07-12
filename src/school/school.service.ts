@@ -1,12 +1,12 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateSchoolDto } from './dto/create-school.dto';
 import { UpdateSchoolDto } from './dto/update-school.dto';
-import { PrismaService } from 'src/prisma/prisma.service';
 import { PrismaClientValidationError } from '@prisma/client/runtime/library';
+import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class SchoolService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   async create(createSchoolDto: CreateSchoolDto) {
     try {
@@ -34,18 +34,28 @@ export class SchoolService {
     }
   }
 
-  async findAll() {
-    const school = await this.prisma.schools.findMany();
-    return { data: school };
+  async findAll(limit: number = 10) {
+    const school = await this.prisma.schools.findMany({ take: +limit });
+    if (!school) {
+      throw new HttpException(
+        'Internal Server error',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+    return { data: school.length ? school : [] };
   }
 
   async findOne(id: number) {
+    const school = await this.prisma.schools.findFirst({
+      where: {
+        id,
+      },
+    });
+    if (!school) {
+      throw new HttpException('School not found', HttpStatus.NOT_FOUND);
+    }
     return {
-      data: await this.prisma.schools.findFirst({
-        where: {
-          id,
-        },
-      }),
+      data: school,
     };
   }
 
