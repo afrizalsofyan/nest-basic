@@ -21,6 +21,7 @@
     "db:generate": "prisma generate --schema=./src/prisma/schema.prisma",
     "db:pull": "prisma db pull --schema=./src/prisma/schema.prisma",
     "db:validate": "prisma db validate --schema=./src/prisma/schema.prisma",
+    "db:migrate": "prisma migrate dev --schema=./src/prisma/schema.prisma",
     "doc:view": "npx @compodoc/compodoc -p tsconfig.json -s"
   },
   "dependencies": {
